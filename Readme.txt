@@ -1,1 +1,1 @@
-This folder contains all of my programs written
+This folder contains some simple programs written by me.
