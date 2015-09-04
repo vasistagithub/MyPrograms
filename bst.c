@@ -15,11 +15,13 @@ struct node
 
 void insert_bst(struct node**,int);
 void inorder_bst(struct node*);
+int mininum_bst(struct node*);
+int maximum_bst(struct node*);
 
 int main()
 {
     int node_value;
-
+    printf("\n\t\t-------BINARY SEARCH TREE OPERATIONS--------\n\n");
     while(1) {
         printf("Enter the number to be inserted into BST:");
         scanf("%d",&node_value);
@@ -30,9 +32,13 @@ int main()
         }
 
     }
-    printf("Displaying BST in inorder fashion\n");
+    printf("\nDisplaying BST in inorder fashion\n");
     inorder_bst(root);
 
+    printf("\nMinimum value in BST is %d\n", minimum_bst(root));
+
+    printf("\nMaximum value in BST is %d\n", maximum_bst(root));
+    
     return 0;
 }
 
@@ -76,3 +82,29 @@ void inorder_bst(struct node* root)
         inorder_bst(root->right);
     }
 }
+
+int minimum_bst(struct node* root)
+{
+    if(!root) {
+        return -1;
+    } else {
+        while(root->left) {
+            root = root->left;
+        }
+        return root->data;
+    }
+}
+
+
+int maximum_bst(struct node* root)
+{
+    if(!root) {
+        return -1;
+    } else {
+        while(root->right) {
+            root = root->right;
+        }
+        return root->data;
+    }
+}
+
