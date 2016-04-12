@@ -1,7 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
 
-void swap(int*,int*);
 int removeDuplicates(int*,int);
 
 int main()
@@ -37,17 +36,17 @@ int removeDuplicates(int *nums, int numsSize)
 
     for(i=0;i<numsSize;i++){
         new_num = nums[i];
-        printf("i is %d and new_num is %d\n",
-                i,new_num);
+        printf("new_num is %d\n",
+                new_num);
         count++;
         for(j=i+1;j<numsSize;j++){
             if(nums[j] != new_num) {
                 break;
             }
         }
-        //swap(&nums[i+1],&nums[j]);
-        printf("nums[j] is %d\n",nums[j]);
-        nums[i+1] = nums[j];
+        if(j < numsSize) {
+            nums[count] = nums[j];
+        }
         i = j-1;
     }
     for(i=0;i<count;i++) {
@@ -58,11 +57,3 @@ int removeDuplicates(int *nums, int numsSize)
 }
 
 
-void swap(int *a, int *b)
-{
-    int temp;
-
-    temp = *a;
-    *a = *b;
-    *b = temp;
-}
