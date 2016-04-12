@@ -1,4 +1,1 @@
-This folder contains some simple programs written by me.
-
-adding from portal again.
-frombox
+Data Structures sample programs which may help in solving general questions faced in interview
