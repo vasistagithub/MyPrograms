@@ -1,6 +1,8 @@
 #include<stdio.h>
 #include<stdlib.h>
 
+int swap(int*,int*);
+
 int main()
 {
     int size_array = 0;
@@ -31,13 +33,55 @@ int main()
 
 int removeElement(int* nums, int numsSize, int val)
 {
-    int i;
+    int i,j;
     int count = 0;
+    int update = 0;
 
     for(i=0;i<numsSize;i++) {
         if(nums[i] == val) {
             count++;
         }
     }
+
+    i = 0;
+    j = numsSize - 1;
+
+    while(i<=j) {
+        /*Traverse from left, take the left element
+         * and if its equal to "val", then swap this element
+         * with non-val from right */
+        while(nums[i] == val) {
+            if(nums[j] != val) {
+                printf("swap values are %d(index)->%d and %d(index)->%d\n",
+                        i,nums[i],j,nums[j]);
+                swap(&nums[i],&nums[j]);
+                if(i > j) {
+                    update = 1;
+                }
+            }
+            j--;
+        }
+        i++;
+    }
+
+    /*TO be safe, if some spill up of last extra swapping happened,
+     * re-swap back*/
+    if(update) {
+        i--;
+        j++;
+        swap(&nums[i],&nums[j]);
+    }
+    printf("updated array is\n");
+    for(i=0;i<numsSize;i++) {
+        printf("%d\t",nums[i]);
+    }
     return (numsSize-count);
+}
+
+int swap(int *a, int *b)
+{
+    int temp;
+    temp = *a;
+    *a = *b;
+    *b = temp;
 }
