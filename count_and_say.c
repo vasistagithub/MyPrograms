@@ -20,9 +20,35 @@ int main()
 int countAndSay(int num)
 {
     int count = 0;
+    int mod1 = 0;
+    int mod = 0;
+    int last_digit = 0;
 
-    mod1 = num%10;
+    if(num/10){
+        while(num) {
+            printf("count is %d\n",count);
+            mod1 = num%10;
 
-    while(num) {
-        mod = num%10;
-        num/=10;
+            if(num/10) {
+                //count ++;
+                num/=10;
+                mod = num%10;
+                num*=10;
+            } 
+            if(mod1 == mod) {
+                count++;
+                printf("%d -> %d\n",mod1,count);
+            } else {
+                printf("%d -> %d\n",mod1,count);
+                mod1 = mod;
+                if(num/100) {
+                    count = 1;
+            }
+                num/=10;
+        }
+    } else {
+        if(num) {
+            printf("%d -> %d\n",num,1);
+        }
+    }
+}
