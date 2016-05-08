@@ -4,6 +4,7 @@
 
 char* reverseVowels(char *str);
 char* reverseVowels2(char *str);
+char* reverseVowels3(char *str);
 void swap(char*,char*);
 
 int main()
@@ -20,6 +21,12 @@ int main()
 
     printf("Reversed vowel string with other algo is %s\n",
             reverseVowels2(str));
+    
+    printf("Now the string is %s\n",str);
+
+    printf("Reversed vowel string with other algo is %s\n",
+            reverseVowels3(str));
+
 
     return 0;
 }
@@ -81,4 +88,36 @@ char* reverseVowels2(char *str)
     }
     return str;
 }
-        
+char* reverseVowels3(char *str)
+{
+    int len_str = strlen(str);
+    int i = 0;
+    int j = 0;
+    int k = 0;
+
+    int *vowel_loc;
+
+    vowel_loc = (int*)calloc(len_str,sizeof(int));
+
+    for(i=0,j=len_str-1;i<len_str/2;i++) {
+        if(str[i] == 'a' || str[i] == 'e' || str[i] == 'i' ||
+                str[i] == 'o' || str[i] == 'u' || str[i] == 'A' ||
+                str[i] == 'E' || str[i] == 'I' || str[i] == 'O' ||
+                str[i] == 'U') {
+            while(j >= len_str/2) {
+                if(str[j] == 'a' || str[j] == 'e' || str[j] == 'i' ||
+                    str[j] == 'o' || str[j] == 'u' || str[j] == 'A' ||
+                    str[j] == 'E' || str[j] == 'I' || str[j] == 'O' ||
+                    str[j] == 'U') {
+                    printf("Swapping %d-%c and %d-%c\n",
+                            i,str[i],j,str[j]);    
+                    swap(&str[i],&str[j]);
+                    j--;
+                    break;
+                } 
+               j--; 
+            }
+        }
+    }
+    return str;
+}
