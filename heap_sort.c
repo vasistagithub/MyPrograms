@@ -17,24 +17,24 @@ void heapify(int*,int);
 
 int main()
 {
-	int *array;
-	int total_count;
-	
-	printf("\n\n\t\t-------HEAP SORTING-------\n");
-	printf("Enter the numbers of elements to be added to array:");
-	scanf("%d", &total_count);
+    int *array;
+    int total_count;
+
+    printf("\n\n\t\t-------HEAP SORTING-------\n");
+    printf("Enter the numbers of elements to be added to array:");
+    scanf("%d", &total_count);
 
     input_array(&array, total_count);
 
-	printf("\nElements before sorting are:\n");
+    printf("\nElements before sorting are:\n");
     display_array(array,total_count);
 
     heapsort(array, total_count);
 
-	printf("Elements after sorting are:\n");
+    printf("Elements after sorting are:\n");
     display_array(array,total_count);
 
-	return 0;
+    return 0;
 }
 
 
@@ -94,7 +94,7 @@ void heapsort(int *array, int num)
 
     heapify(array, num-1);
     
-    for(i=num-1; i>0; i--) {
+    for(i=num-1; i>=0; i--) {
         swap(&array[0], &array[i]);
         heapify(array,i-1);
     }
