@@ -17,6 +17,10 @@ struct sll
 struct node* insert_bst(struct node*, int);
 void recursive_inorderbst(struct node*);
 void LevelOrder(struct node* root);
+int height_bst (struct node* root);
+int max(int, int);
+void print_level_order_bst_recursive (struct node* root, int height);
+void print_each_level(struct node*, int);
 
 void enqueue(struct node* val)
 {
@@ -75,6 +79,7 @@ void LevelOrder(struct node* root)
 int main ()
 {
     int num;
+    int height = 0;
 
     while(1) {
         printf("Enter the number:");
@@ -88,10 +93,16 @@ int main ()
     }
     printf("\nDisplaying BST in inorder(Recursive)\n");
     recursive_inorderbst(root);
- 
+
+    height = height_bst(root);
+    printf("\nHeight of the tree is %d\n", height);
+
     printf("\nLevel order traversal of tree\n");
     LevelOrder(root);
     
+    printf("\n Level order traversal recursively\n");
+    print_level_order_bst_recursive (root, height);
+
     printf("\n");
 
     return 0;
@@ -134,5 +145,45 @@ void recursive_inorderbst(struct node* root)
         recursive_inorderbst(root->left);
         printf("%d\t", root->data);
         recursive_inorderbst(root->right);
+    }
+}
+
+int height_bst (struct node* root)
+{
+    if(root == NULL) {
+        return 0;
+    } else {
+        return 1 + max(height_bst(root->left), height_bst(root->right));
+    }
+}
+
+int max(int a, int b)
+{
+    if (a >= b) {
+         return a;
+    } else {
+        return b;
+    }
+}
+
+void print_level_order_bst_recursive (struct node* root, int height)
+{
+    int i = 0;
+    
+    for(i=0; i<height; i++) {
+        print_each_level(root, i+1);
+    }
+}
+
+void print_each_level (struct node* root, int level)
+{
+    if(root == NULL) {
+        return;
+    } else {
+        if(level == 1) {
+            printf("%d\t", root->data);
+        }
+        print_each_level(root->left, level-1);
+        print_each_level(root->right, level-1);
     }
 }
