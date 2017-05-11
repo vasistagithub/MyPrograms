@@ -54,7 +54,7 @@ int main ()
     
     printf("\nIterative postorder BST\n");
     iterative_postorder(root);
-    
+
     printf("\n");
 
     return 0;
@@ -230,3 +230,4 @@ void iterative_postorder(struct node* root)
         }
     }
 }
+
