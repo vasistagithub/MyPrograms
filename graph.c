@@ -27,6 +27,7 @@ void BFS(struct node**, int);
 void DFS_recursion(int);
 void find_cycle(int);
 void print_topological_sort(struct node* topo_sort_head);
+void kahn_algo_topo_sort(struct node **head, int num_vertices);
 
 int main()
 {
@@ -92,6 +93,9 @@ int main()
 
     printf("\n Topological Sort of Graph\n");
     print_topological_sort(topo_sort_head);
+
+    printf("\n Topological Sort using Kahn Algorithm\n");
+    kahn_algo_topo_sort(head, num_nodes);
 
     printf("\n\n");
     return 0;
@@ -293,5 +297,60 @@ void print_topological_sort(struct node* topo_sort_head)
     while(topo_sort_head) {
         printf("%d---", topo_sort_head->vertex);
         topo_sort_head = topo_sort_head->next;
+    }
+}
+
+void kahn_algo_topo_sort(struct node **head, int num_vertices)
+{
+    int i,j;
+    int *indegree = NULL;
+    struct node* temp_node = NULL;
+    int tmp_vertex;
+    int vertex_count = 0;
+
+    indegree = (int*)calloc(num_vertices,sizeof(int));
+   
+   for(i = 0; i < num_vertices; i++) { 
+        tmp_vertex = i;
+        for(j = 0; j < num_vertices; j++) {
+            temp_node = head[j];
+            while(temp_node) {
+                if(temp_node->vertex == tmp_vertex) {
+                    indegree[tmp_vertex]++;
+                }
+                temp_node = temp_node->next;
+            }
+        }
+   }
+   
+   /*To reset Global queue
+    * Memleaks not considered at this moment*/ 
+    front = rear = NULL;
+
+    for(i = 0; i < num_vertices; i++) {
+        if(indegree[i] == 0) {
+            enqueue(i);
+        }
+    }
+
+    while(!queue_empty()){
+        tmp_vertex = dequeue();
+        vertex_count++;
+        printf("%d--", tmp_vertex);
+        temp_node = head[tmp_vertex];
+
+        while(temp_node) {
+            indegree[temp_node->vertex]--;
+            if(indegree[temp_node->vertex] == 0) {
+               enqueue(temp_node->vertex);
+            } 
+            temp_node = temp_node->next;
+        }
+    }
+
+    if(vertex_count == num_vertices) {
+        printf("\nNo Cycle in Graph\n");
+    } else {
+        printf("\nCycle exists in Graph\n");
     }
 }
