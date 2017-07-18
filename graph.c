@@ -19,11 +19,13 @@ struct node* topo_sort_head = NULL;
 
 int *parent = NULL;
 int *color = NULL;
- 
+int cycle_exists = 0;
+
 void insert_graph(struct node**,int);
 void display_graph(struct node**,int);
 void BFS(struct node**, int);
 void DFS_recursion(int);
+void find_cycle(int);
 void print_topological_sort(struct node* topo_sort_head);
 
 int main()
@@ -74,6 +76,19 @@ int main()
             DFS_recursion(i);
         }
     }
+    for(i = 0; i < num_nodes; i++) {
+        color[i] = 0;
+    } 
+    printf("\n Identifying cycle in Graph\n");
+    for(i = 0; i < num_nodes; i++) {
+        if(cycle_exists) {
+            break;
+        }
+        if(color[i] == 0) {
+            find_cycle(i);
+        }
+    }
+    cycle_exists = 0;
 
     printf("\n Topological Sort of Graph\n");
     print_topological_sort(topo_sort_head);
@@ -226,6 +241,28 @@ struct node* create_topological_sort(struct node* topo_sort_head, int vertex)
         topo_sort_head = tmp;
     }
     return topo_sort_head;
+}
+
+void find_cycle(int first_vertex)
+{
+    int i = 0;
+    struct node* tmp_node = NULL;
+
+
+    color[first_vertex] = 1;
+    tmp_node = head[first_vertex];
+
+    while(tmp_node) {
+        if(color[tmp_node->vertex] == 0) {
+            color[tmp_node->vertex] = 1;
+            find_cycle(tmp_node->vertex);
+        } else if (color[tmp_node->vertex] == 1){
+            printf("Cycle exists in graph\n");
+            cycle_exists = 1;
+        }
+        tmp_node = tmp_node->next;
+    }
+    color[first_vertex] = 2;
 }
 
 void DFS_recursion(int first_vertex)
