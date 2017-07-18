@@ -1,8 +1,3 @@
-/*
- * Program to insert graph in an Adjacency list
- * Author: Vasista Jayanth K
- * Date: 30 August 2015
- * */
 #include<stdio.h>
 #include<stdlib.h>
 
@@ -17,7 +12,6 @@ struct node* rear = NULL;
 struct node* top = NULL;
 struct node* topo_sort_head = NULL;
 
-int *parent = NULL;
 int *color = NULL;
 int cycle_exists = 0;
 
@@ -57,19 +51,16 @@ int main()
     printf("\nDisplaying graph in adjacency list format\n\n");
     display_graph(head, num_nodes);
 
-    parent = (int*)malloc(num_nodes*sizeof(int));
     color  = (int*)malloc(num_nodes*sizeof(int));
 
     for(i = 0; i < num_nodes ; i++) {
         color[i] = 0;
-        parent[i] = -9999;
     }
     printf("\n Performing BFS on Graph\n");
     BFS(head, num_nodes);
  
     for(i = 0; i < num_nodes; i++) {
         color[i] = 0;
-        parent[i] = -9999;
     }   
     printf("\n Performing DFS on Graph\n");
     for(i = 0; i < num_nodes; i++) {
@@ -89,7 +80,11 @@ int main()
             find_cycle(i);
         }
     }
-    cycle_exists = 0;
+    if(!cycle_exists) {
+        printf("No cycle in Graph provided\n");
+    } else {
+        cycle_exists = 0;
+    }
 
     printf("\n Topological Sort of Graph\n");
     print_topological_sort(topo_sort_head);
@@ -129,6 +124,7 @@ void display_graph(struct node **head, int num_nodes)
 
     for(i=0; i<num_nodes; i++) {
         temp = head[i];
+        printf("%d==>", i);
         while(temp) {
             printf("%d---",temp->vertex);
             temp = temp->next;
@@ -176,7 +172,6 @@ void BFS(struct node **head, int num_vertices)
     int i = 0;
     struct node* tmp_node = NULL;
 
-    parent[0] = -9999;
     color[0] = 1;
     enqueue(0);
     
@@ -187,7 +182,6 @@ void BFS(struct node **head, int num_vertices)
 
         while(tmp_node) {
             if(color[tmp_node->vertex] == 0) {
-                parent[tmp_node->vertex] = tmp_vertex;
                 color[tmp_node->vertex] = 1;
                 enqueue(tmp_node->vertex);
             }
@@ -302,7 +296,7 @@ void print_topological_sort(struct node* topo_sort_head)
 
 void kahn_algo_topo_sort(struct node **head, int num_vertices)
 {
-    int i,j;
+    int i;
     int *indegree = NULL;
     struct node* temp_node = NULL;
     int tmp_vertex;
@@ -310,16 +304,11 @@ void kahn_algo_topo_sort(struct node **head, int num_vertices)
 
     indegree = (int*)calloc(num_vertices,sizeof(int));
    
-   for(i = 0; i < num_vertices; i++) { 
-        tmp_vertex = i;
-        for(j = 0; j < num_vertices; j++) {
-            temp_node = head[j];
-            while(temp_node) {
-                if(temp_node->vertex == tmp_vertex) {
-                    indegree[tmp_vertex]++;
-                }
-                temp_node = temp_node->next;
-            }
+    for(i = 0; i < num_vertices; i++) {
+        temp_node = head[i];
+        while(temp_node) {
+            indegree[temp_node->vertex]++;
+            temp_node = temp_node->next;
         }
    }
    
