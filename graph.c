@@ -18,6 +18,7 @@ int cycle_exists = 0;
 void insert_graph(struct node**,int);
 void display_graph(struct node**,int);
 void BFS(struct node**, int);
+void DFS(struct node**, int, int);
 void DFS_recursion(int);
 void find_cycle(int);
 void print_topological_sort(struct node* topo_sort_head);
@@ -59,6 +60,16 @@ int main()
     printf("\n Performing BFS on Graph\n");
     BFS(head, num_nodes);
  
+    for(i = 0; i < num_nodes ; i++) {
+        color[i] = 0;
+    }
+    printf("\n Performing DFS on Graph Iteratively\n");
+    for(i = 0; i < num_nodes; i++) {
+        if(color[i] == 0) {
+            DFS(head, num_nodes, i);
+        }
+    }
+
     for(i = 0; i < num_nodes; i++) {
         color[i] = 0;
     }   
@@ -165,33 +176,6 @@ int dequeue()
     return vertex;
 }
 
-void BFS(struct node **head, int num_vertices)
-{
-    int flag = 0;
-    int tmp_vertex = 0;
-    int i = 0;
-    struct node* tmp_node = NULL;
-
-    color[0] = 1;
-    enqueue(0);
-    
-    while(!queue_empty()) {
-        tmp_vertex = dequeue();
-        printf("%d--", tmp_vertex);
-        tmp_node = head[tmp_vertex];
-
-        while(tmp_node) {
-            if(color[tmp_node->vertex] == 0) {
-                color[tmp_node->vertex] = 1;
-                enqueue(tmp_node->vertex);
-            }
-            tmp_node = tmp_node->next;
-        }
-        color[tmp_vertex] = 2;
-   
-    }
-}
-
 void push(int vertex)
 {
     struct node* tmp = NULL;
@@ -223,6 +207,59 @@ int stack_empty()
         return 0;
     }
 }
+void DFS(struct node **head, int num_vertices, int vertex)
+{
+    int tmp_vertex = 0;
+    int i = 0;
+    struct node* tmp_node = NULL;
+
+    color[vertex] = 1;
+    push(vertex);
+    
+    while(!stack_empty()) {
+        tmp_vertex = pop();
+        printf("%d--", tmp_vertex);
+        tmp_node = head[tmp_vertex];
+
+        while(tmp_node) {
+            if(color[tmp_node->vertex] == 0) {
+                color[tmp_node->vertex] = 1;
+                push(tmp_node->vertex);
+            }
+            tmp_node = tmp_node->next;
+        }
+        color[tmp_vertex] = 2;
+    }
+}
+
+void BFS(struct node **head, int num_vertices)
+{
+    int flag = 0;
+    int tmp_vertex = 0;
+    int i = 0;
+    struct node* tmp_node = NULL;
+
+    color[0] = 1;
+    enqueue(0);
+    
+    while(!queue_empty()) {
+        tmp_vertex = dequeue();
+        printf("%d--", tmp_vertex);
+        tmp_node = head[tmp_vertex];
+
+        while(tmp_node) {
+            if(color[tmp_node->vertex] == 0) {
+                color[tmp_node->vertex] = 1;
+                enqueue(tmp_node->vertex);
+            }
+            tmp_node = tmp_node->next;
+        }
+        color[tmp_vertex] = 2;
+   
+    }
+}
+
+
 
 struct node* create_topological_sort(struct node* topo_sort_head, int vertex)
 {
@@ -270,7 +307,6 @@ void DFS_recursion(int first_vertex)
 
 
     color[first_vertex] = 1;
-
     tmp_node = head[first_vertex];
 
     while(tmp_node) {
