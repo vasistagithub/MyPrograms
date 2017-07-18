@@ -15,6 +15,7 @@ struct node
 struct node* front = NULL;
 struct node* rear = NULL;
 struct node* top = NULL;
+struct node* topo_sort_head = NULL;
 
 int *parent = NULL;
 int *color = NULL;
@@ -22,7 +23,8 @@ int *color = NULL;
 void insert_graph(struct node**,int);
 void display_graph(struct node**,int);
 void BFS(struct node**, int);
-void DFS(struct node**, int);
+void DFS_recursion(int);
+void print_topological_sort(struct node* topo_sort_head);
 
 int main()
 {
@@ -52,12 +54,31 @@ int main()
     printf("\nDisplaying graph in adjacency list format\n\n");
     display_graph(head, num_nodes);
 
+    parent = (int*)malloc(num_nodes*sizeof(int));
+    color  = (int*)malloc(num_nodes*sizeof(int));
+
+    for(i = 0; i < num_nodes ; i++) {
+        color[i] = 0;
+        parent[i] = -9999;
+    }
     printf("\n Performing BFS on Graph\n");
     BFS(head, num_nodes);
-    
+ 
+    for(i = 0; i < num_nodes; i++) {
+        color[i] = 0;
+        parent[i] = -9999;
+    }   
     printf("\n Performing DFS on Graph\n");
-    DFS(head, num_nodes);
+    for(i = 0; i < num_nodes; i++) {
+        if(color[i] == 0) {
+            DFS_recursion(i);
+        }
+    }
 
+    printf("\n Topological Sort of Graph\n");
+    print_topological_sort(topo_sort_head);
+
+    printf("\n\n");
     return 0;
 }
 
@@ -81,7 +102,6 @@ void insert_graph(struct node** head, int graph_node)
         temp_head->next = temp;
     }
 }
-
 
 void display_graph(struct node **head, int num_nodes)
 {
@@ -129,6 +149,7 @@ int dequeue()
     front = front->next;
     return vertex;
 }
+
 void BFS(struct node **head, int num_vertices)
 {
     int flag = 0;
@@ -136,18 +157,10 @@ void BFS(struct node **head, int num_vertices)
     int i = 0;
     struct node* tmp_node = NULL;
 
-    parent = (int*)malloc(num_vertices*sizeof(int));
-    color  = (int*)malloc(num_vertices*sizeof(int));
-
-
-    for(i = 0; i < num_vertices ; i++) {
-        color[i] = 0;
-        parent[i] = -9999;
-    }
-
     parent[0] = -9999;
     color[0] = 1;
     enqueue(0);
+    
     while(!queue_empty()) {
         tmp_vertex = dequeue();
         printf("%d--", tmp_vertex);
@@ -161,11 +174,10 @@ void BFS(struct node **head, int num_vertices)
             }
             tmp_node = tmp_node->next;
         }
-        color[head[tmp_vertex]->vertex] = 2;
+        color[tmp_vertex] = 2;
    
     }
 }
-
 
 void push(int vertex)
 {
@@ -199,38 +211,50 @@ int stack_empty()
     }
 }
 
-void DFS(struct node **head, int num_vertices)
+struct node* create_topological_sort(struct node* topo_sort_head, int vertex)
 {
-    int tmp_vertex = 0;
+    struct node* tmp = NULL;
+
+    tmp = (struct node*)malloc(sizeof(struct node));
+    tmp->vertex = vertex;
+    tmp->next = NULL;
+
+    if(topo_sort_head == NULL) {
+        topo_sort_head = tmp;
+    } else {
+        tmp->next = topo_sort_head;
+        topo_sort_head = tmp;
+    }
+    return topo_sort_head;
+}
+
+void DFS_recursion(int first_vertex)
+{
     int i = 0;
     struct node* tmp_node = NULL;
 
-    parent = (int*)malloc(num_vertices*sizeof(int));
-    color  = (int*)malloc(num_vertices*sizeof(int));
 
+    color[first_vertex] = 1;
 
-    for(i = 0; i < num_vertices ; i++) {
-        color[i] = 0;
-        parent[i] = -9999;
-    }
+    tmp_node = head[first_vertex];
 
-    parent[0] = -9999;
-    color[0] = 1;
-    push(0);
-    while(!stack_empty()) {
-        tmp_vertex = pop();
-        printf("%d--", tmp_vertex);
-        tmp_node = head[tmp_vertex];
-
-        while(tmp_node) {
-            if(color[tmp_node->vertex] == 0) {
-                parent[tmp_node->vertex] = tmp_vertex;
-                color[tmp_node->vertex] = 1;
-                push(tmp_node->vertex);
-            }
-            tmp_node = tmp_node->next;
+    while(tmp_node) {
+        if(color[tmp_node->vertex] == 0) {
+            color[tmp_node->vertex] = 1;
+            DFS_recursion(tmp_node->vertex);
         }
-        color[head[tmp_vertex]->vertex] = 2;
-   
+        tmp_node = tmp_node->next;
+    }
+    color[first_vertex] = 2;
+    printf("%d--", first_vertex);
+    /*Inserting each vertex to head of linked list for topo sort*/
+    topo_sort_head = create_topological_sort(topo_sort_head, first_vertex);
+}
+
+void print_topological_sort(struct node* topo_sort_head)
+{
+    while(topo_sort_head) {
+        printf("%d---", topo_sort_head->vertex);
+        topo_sort_head = topo_sort_head->next;
     }
 }
