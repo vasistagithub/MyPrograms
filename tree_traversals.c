@@ -24,13 +24,14 @@ int stack_empty(struct stack_node*);
 void iterative_preorder(struct node*);
 void iterative_inorder(struct node*);
 void iterative_postorder(struct node*);
+struct node* convert_bst_to_dll(struct node*);
 
 int main ()
 {
     int num;
 
     while(1) {
-        printf("Enter the number:");
+        printf("Enter the number(To Stop press -1):");
         scanf("%d", &num);
 
         if(num == -1) {
@@ -55,6 +56,20 @@ int main ()
     printf("\nIterative postorder BST\n");
     iterative_postorder(root);
 
+    printf("Converting a BST into Double linked list\n");
+    (void*)convert_bst_to_dll(root);
+
+    while(root && root->left) {
+        root = root->left;
+    }
+    struct node* head = NULL;
+
+    head = root;
+
+    while(head) {
+        printf("%d--", head->data);
+        head = head->right;
+    }
     printf("\n");
 
     return 0;
@@ -231,3 +246,19 @@ void iterative_postorder(struct node* root)
     }
 }
 
+struct node* convert_bst_to_dll(struct node* root)
+{
+    if(root == NULL) {
+        return root;
+    } else {
+        root->left = convert_bst_to_dll(root->left);
+        if(root->left) {
+            root->left->right = root;
+        }
+        return root;
+        root->right = convert_bst_to_dll(root->right);
+        if(root->right) {
+            root->right->left = root;
+        }
+    }
+}
