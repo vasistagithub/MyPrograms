@@ -56,15 +56,9 @@ int main ()
     printf("\nIterative postorder BST\n");
     iterative_postorder(root);
 
-    printf("Converting a BST into Double linked list\n");
-    (void*)convert_bst_to_dll(root);
-
-    while(root && root->left) {
-        root = root->left;
-    }
     struct node* head = NULL;
-
-    head = root;
+    printf("\nConverting a BST into Double linked list\n");
+    head = convert_bst_to_dll(root);
 
     while(head) {
         printf("%d--", head->data);
@@ -248,17 +242,18 @@ void iterative_postorder(struct node* root)
 
 struct node* convert_bst_to_dll(struct node* root)
 {
-    if(root == NULL) {
-        return root;
-    } else {
-        root->left = convert_bst_to_dll(root->left);
+    if(root) {
+        convert_bst_to_dll(root->left);
         if(root->left) {
             root->left->right = root;
         }
-        return root;
-        root->right = convert_bst_to_dll(root->right);
+        convert_bst_to_dll(root->right);
         if(root->right) {
             root->right->left = root;
         }
     }
+    while(root && root->left) {
+        root = root->left;
+    }
+    return root;
 }
