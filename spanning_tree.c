@@ -14,9 +14,6 @@ struct pq_node
     int weight;
 };
 
-void input_array(struct pq_node**, int);
-void heapsort(struct pq_node*,int);
-void display_array(struct pq_node*,int);
 void swap(struct pq_node*, struct pq_node*);
 void heapify(struct pq_node*,int);
 int search_in_heap(struct pq_node *array, int node_to_search, int array_size);
@@ -201,48 +198,3 @@ void swap(struct pq_node *a, struct pq_node *b)
     (*b).weight = tmp_weight;
     (*b).vertex = tmp_vertex;
 }
-
-/*
-void heapsort(struct pq_node *array, int num)
-{
-    int i;
-
-    heapify(array, num-1);
-    
-    for(i=num-1; i>=0; i--) {
-        swap(&array[0], &array[i]);
-        heapify(array,i-1);
-    }
-}
-*/
-
-/*
-void input_array(struct pq_node **array, int total_count)
-{
-    int i;
-    int vertex;
-    int weight;
-
-	(*array) = (struct pq_node*)malloc((total_count)*sizeof(struct pq_node));
-
-	for(i = 0; i < total_count; i++) {
-		printf("Enter the vertex to be added:");
-		scanf("%d", &vertex);
-		(*array)[i].vertex = vertex;
-		printf("Enter the weight to be added for %d vertex:", vertex);
-                scanf("%d", &weight);
-                (*array)[i].weight = weight;
-
-	}
-}
-
-void display_array(struct pq_node *array, int total_count)
-{
-    int i;
-
-   	for(i=total_count-1; i>=0; i--) {
-		printf("vertex:%d--weight:%d\n", array[i].vertex,
-                       array[i].weight);
-	}
-}
-*/
