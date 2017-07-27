@@ -1,1 +1,1 @@
-Data Structures sample programs which may help in solving general questions faced in interview
+Data Structures and Algorithms implementation in C language
