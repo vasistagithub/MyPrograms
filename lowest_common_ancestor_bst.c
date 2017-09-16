@@ -8,21 +8,17 @@ struct node
     struct node* right;
 }*root = NULL;
 
-struct sll
-{
-    struct node* val_node;
-    struct sll* next;
-}*top1 = NULL, *top2 = NULL;
-
 struct node* insert_bst(struct node*, int);
 void recursive_inorderbst(struct node*);
-struct node* lca(struct node*, int, int);
+struct node* lowest_common_ancestor_iter(struct node*, int, int);
+int lowest_common_ancestor_recur(struct node*, int, int);
 
 int main ()
 {
     int num;
     int node1, node2;
     struct node* new_node = NULL;
+    int ancestor_val = -1;
 
     while(1) {
         printf("Enter the number:");
@@ -43,15 +39,28 @@ int main ()
     printf("Enter second node in BST:");
     scanf("%d",&node2);
     
-    printf("\nFind lowest common ancestor of two nodes in BST\n");
-    new_node = lca(root, node1, node2);
+    printf("\nFind lowest common ancestor by iterative way in BST\n");
+    new_node = lowest_common_ancestor_iter(root, node1, node2);
    
     if(new_node) { 
         printf("Lowest common ancestor of %d and %d is %d\n",
                node1, node2, new_node->data);
+    } else {
+        printf("Lowest common ancestor of %d and %d is not found\n",
+               node1, node2);
     }
-    printf("\n");
 
+    printf("\nFinding lowest common ancestor by recursive way in BST\n");
+    ancestor_val = lowest_common_ancestor_recur(root, node1, node2);
+ 
+    if(ancestor_val == -1) {
+        printf("No Lowest common ancestor of %d and %d found\n", node1, node2);
+    } else {
+        printf("Lowest common ancestor of %d and %d is %d\n", node1, node2, ancestor_val);
+    }
+
+    printf("\n");
+    
     return 0;
 }
 
@@ -95,87 +104,32 @@ void recursive_inorderbst(struct node* root)
     }
 }
 
-void push_stack(struct sll **top, struct node *new_node)
+struct node* lowest_common_ancestor_iter(struct node* root, int n1, int n2)
 {
-    struct sll *temp_node = NULL;
-    temp_node = (struct sll*)malloc(sizeof(struct sll));
-    temp_node->val_node = new_node;
-    temp_node->next = NULL;
-
-    if(*top == NULL) {
-        (*top) = temp_node;
-    } else {
-        temp_node->next = (*top);
-        (*top) = temp_node;
+    while(root) {
+        if(root->data > n1 && root->data > n2) {
+            root = root->left;
+        } else if (root->data < n1 && root->data < n2) {
+            root = root->right;
+        } else {
+            break;
+        }
     }
+    return root;
 }
 
-struct node* lca(struct node *root, int v1,int v2)
+int lowest_common_ancestor_recur(struct node* root, int n1, int n2)
 {
-    struct node *temp = NULL;
-    struct node *parent = NULL;
-    int stack1_length = 0;
-    int stack2_length = 0;
-    int first_stack_big = 0;
-
-    temp = root;
-    while(temp) {
-        parent = temp;
-        push_stack(&top1, parent);
-        stack1_length++;
-
-        if(parent->data == v1) {
-            break;
-        }
-
-        if(v1 <= temp->data) {
-            temp = temp->left;
-        } else {
-            temp = temp->right;
-        }
+    if(root == NULL) {
+        return -1;
     }
 
-    temp = root;
-    while(temp) {
-        parent = temp;
-
-        push_stack(&top2, parent);
-        stack2_length++;
-
-        if(parent->data == v2) {
-            break;
-        }
-        if(v2 <= temp->data) {
-            temp = temp->left;
-        } else {
-            temp = temp->right;
-        }
-    }
-    if(!stack1_length || !stack2_length) {
-        return root;
-    }
-    if(stack1_length >= stack2_length) {
-        first_stack_big = 1;
-    }
-    if(first_stack_big) {
-        while(stack1_length > stack2_length) {
-            top1 = top1->next;
-            stack1_length--;
-        }
-    } else {
-        while(stack2_length > stack1_length) {
-            top2 = top2->next;
-            stack2_length--;
-        }
+    if(root->data > n1 && root->data > n2) {
+        return lowest_common_ancestor_recur(root->left, n1, n2);
     }
 
-    while(top1 && top2) {
-        if(top1->val_node->data == top2->val_node->data) {
-            break;
-        } else {
-            top1 = top1->next;
-            top2 = top2->next;
-        }
+    if(root->data < n1 && root->data < n2) {
+        return lowest_common_ancestor_recur(root->right, n1, n2);
     }
-    return top1->val_node;
+    return root->data;
 }
