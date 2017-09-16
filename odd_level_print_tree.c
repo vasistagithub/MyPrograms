@@ -10,7 +10,7 @@ struct node
 
 void insert_bst(struct node**, int);
 void inorder_bst(struct node*);
-void odd_level_print_bst(struct node* root, int is_odd_level);
+void odd_level_print_bst(struct node*, int);
 
 int main()
 {
@@ -31,10 +31,10 @@ int main()
     printf("Displaying BST in inorder\n");
     inorder_bst(root);
 
-    printf("Displaying odd level nodes of BST\n");
+    printf("\nDisplaying odd level nodes of BST\n");
     odd_level_print_bst(root, 1);
 
-
+    printf("\n");
     return 0;
 }
 
