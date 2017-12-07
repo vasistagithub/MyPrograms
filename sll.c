@@ -10,12 +10,14 @@ struct node {
 
 void insert_sll(struct node**, int);
 void display_sll(struct node*);
-void delete_sll(struct node*, int);
+struct node* delete_sll(struct node*, int);
 struct node* delete_node_recur(struct node* ,int);
+void reverse_linked_list(struct node*, struct node**);
 
 int main() 
 {
 	int num;
+        struct node* new_head = NULL;
 
 	while(1) {
 		printf("Enter the node to be inserted to list:");
@@ -31,23 +33,30 @@ int main()
 	printf("Printing Single linked list\n");
 	display_sll(head);
 
-	printf("Enter the number to be deleted from SLL:");
+        printf("\nReversing linked list\n");
+        reverse_linked_list(head, &new_head);
+	
+        printf("Printing the Reversed Single Linked List\n");
+	display_sll(new_head);
+
+        printf("\nEnter the number to be deleted from updated SLL:");
 	scanf("%d",&num);
 
-	delete_sll(head,num);
-
-	printf("SLL after deleting %d\n", num);
-
-	display_sll(head);
+	new_head = delete_sll(new_head,num);
 	
-        printf("Enter the number to be deleted from SLL:");
+        printf("\nSLL after deleting %d\n", num);
+	display_sll(new_head);
+	
+        printf("\nEnter the number to be deleted from SLL:");
 	scanf("%d",&num);
         
-        head = delete_node_recur(head, num);	
+        new_head = delete_node_recur(new_head, num);	
 	
-        printf("SLL after deleting %d\n", num);
-	display_sll(head);
-	
+        printf("\nSLL after deleting %d\n", num);
+	display_sll(new_head);
+
+        printf("\n");
+
         return 0;
 }
 
@@ -78,29 +87,31 @@ void display_sll(struct node* temp_head)
 	}
 }
 
-void delete_sll(struct node* temp_head, int num)
+struct node* delete_sll(struct node* head, int num)
 {
 	struct node* parent;
+        struct node* tmp_head = head;
 
-	if(temp_head) {
-		if(temp_head->data == num) {
-			head = temp_head->link;
+	if(head) {
+		if(head->data == num) {
+			return head->link;
 		} else {
-			parent = temp_head;
-			temp_head = temp_head->link;
+			parent = head;
+			head = head->link;
 
-			while(temp_head != NULL && temp_head->data != num) {
-				parent = temp_head;
-				temp_head = temp_head->link;
+			while(head != NULL && head->data != num) {
+				parent = head;
+				head = head->link;
 			}
 
-			if(temp_head == NULL) {
+			if(head == NULL) {
 				printf("Unable to find the %d in SLL\n", num);
 			} else {
-				parent->link = temp_head->link;
+				parent->link = head->link;
 			}
 		}
 	}
+        return tmp_head;
 }
 
 struct node* delete_node_recur(struct node* head, int num)
@@ -113,4 +124,20 @@ struct node* delete_node_recur(struct node* head, int num)
         }
     }
     return head;
-} 
+}
+
+void reverse_linked_list(struct node* head, struct node** ref)
+{
+    struct node* curr_next = NULL;
+
+    if(head) {
+        if(head->link == NULL) {
+            *ref = head;
+        } else {
+            reverse_linked_list(head->link, ref);
+            curr_next = head->link->link;
+            head->link->link = head;
+            head->link = curr_next;
+        }
+    }
+}
