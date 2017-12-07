@@ -11,6 +11,7 @@ struct node {
 void insert_sll(struct node**, int);
 void display_sll(struct node*);
 void delete_sll(struct node*, int);
+struct node* delete_node_recur(struct node* ,int);
 
 int main() 
 {
@@ -39,7 +40,15 @@ int main()
 
 	display_sll(head);
 	
-	return 0;
+        printf("Enter the number to be deleted from SLL:");
+	scanf("%d",&num);
+        
+        head = delete_node_recur(head, num);	
+	
+        printf("SLL after deleting %d\n", num);
+	display_sll(head);
+	
+        return 0;
 }
 
 void insert_sll(struct node** temp_head, int num)
@@ -93,3 +102,15 @@ void delete_sll(struct node* temp_head, int num)
 		}
 	}
 }
+
+struct node* delete_node_recur(struct node* head, int num)
+{
+    if(head) {
+        if(head->data == num) {
+            return head->link;
+        } else {
+            head->link = delete_node_recur(head->link, num);
+        }
+    }
+    return head;
+} 
