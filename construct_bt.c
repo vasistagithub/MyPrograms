@@ -9,6 +9,7 @@ struct node
 };
 
 struct node* construct_tree(int first, int last, int *in, int *pre);
+void postorder(struct node*);
 void inorder(struct node*);
 int search_inorder(int *array, int num, int first, int last);
 
@@ -44,10 +45,26 @@ int main()
     root = construct_tree(0, num_nodes-1, in, pre);
 
     printf("printing Binary tree in Post order form\n");
+    postorder(root);
 
+    printf("\n");
+
+    printf("printing Binary tree in In order form\n");
     inorder(root);
 
-   return 0;
+    printf("\n");
+
+
+    return 0;
+}
+
+void postorder(struct node* root)
+{
+    if(root) {
+        postorder(root->left);
+        postorder(root->right);
+        printf("%d--", root->data);
+    }
 }
 
 void inorder(struct node* root)
@@ -67,6 +84,7 @@ int search_inorder(int *array, int num, int first, int last)
             return i;
         }
     }
+    return -1;
 }
 
 struct node* construct_tree(int first, int last, int *in, int *pre)
@@ -84,16 +102,15 @@ struct node* construct_tree(int first, int last, int *in, int *pre)
         tmp_node->left = NULL;
         tmp_node->right = NULL;
 
-        if (first == last) {
-            return tmp_node;
-        } else {
-            root_loc = search_inorder(in, tmp_node->data, first, last);
+        root_loc = search_inorder(in, tmp_node->data, first, last);
 
-            tmp_node->left = construct_tree(first, root_loc-1, in, pre);
-            tmp_node->right = construct_tree(root_loc+1, last, in, pre);
-
-            return tmp_node;
+        if(root_loc == -1) {
+            return NULL;
         }
+        tmp_node->left = construct_tree(first, root_loc-1, in, pre);
+        tmp_node->right = construct_tree(root_loc+1, last, in, pre);
+
+        return tmp_node;
     }
 }
 
