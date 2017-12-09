@@ -158,19 +158,21 @@ struct ListNode* mergeTwoLists_v2(struct ListNode* l1, struct ListNode* l2)
     return l3;
 }
 
+/* No Need to loop the complete existing list to place the new node
+ * at the end of the list. Instead, have a static variable pointed to
+ * tail so that whenever any new node comes in, it can be inserted 
+ * to the next of tail and then update tail to new node
+ */
 void insert_list_v2(struct ListNode** ret_list, struct ListNode* list)
 {
-    struct ListNode* tmp_node = NULL;
+    static struct ListNode* tail = NULL;
 
     list->next = NULL;
 
     if(*ret_list == NULL) {
-        *ret_list = list;
+        *ret_list = tail = list;
     } else {
-        tmp_node = (*ret_list);
-        while(tmp_node->next) {
-            tmp_node = tmp_node->next;
-        }
-        tmp_node->next = list;
+        tail->next = list;
+        tail = list; 
     }
 }
