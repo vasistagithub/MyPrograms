@@ -12,17 +12,20 @@ int main()
     char number[10] = {'\0'};
     int length;
     int col = 0;
+    char c;
 
     printf("Enter the phone number length:");
     scanf("%d", &length);
     
-    printf("\nEnter the phone number of %d digits:", length);
-    for(i = 0; i <= length; i++) {
+    c = getchar();
+
+    printf("Enter the phone number of %d digits:", length);
+    for(i = 0; i < length; i++) {
         scanf("%c", &number[i]);
     }
-/* Not sure why "\n" is appended as suffix to number read at location number[0]
- * and so our required input number is available from index 1
- */    
+
+    c = getchar();
+
     printf("Given phone number is %s\n", number);
     printf("printing T9 keyboard\n");
     for(i = 0;i < 10; i++) {
@@ -32,7 +35,7 @@ int main()
         printf("\n");
     }
     printf("Printing all possible strings of %s phone number\n", number); 
-    print_string(number, length+1, 1, path);
+    print_string(number, length, 0, path);
 
     return 0;
 }
