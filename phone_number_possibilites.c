@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-char t9[10][3] = {"abc", "def", "ghi", "jkl", "mno", "pqr", "stu", "vwx", "yz$", "@#*"};
+char t9[][3] = {"abc", "def", "ghi", "jkl", "mno", "pqr", "stu", "vwx", "yz$", "@#*"};
 
 void print_string(char *number, int length, int index, char* path);
 
@@ -10,17 +10,19 @@ int main()
     int i = 0;
     char path[10] = {'\0'};
     char number[10] = {'\0'};
-    int length = 0;
+    int length;
     int col = 0;
 
     printf("Enter the phone number length:");
     scanf("%d", &length);
     
-    printf("Enter the phone number of %d digits:", length);
+    printf("\nEnter the phone number of %d digits:", length);
     for(i = 0; i <= length; i++) {
         scanf("%c", &number[i]);
     }
-    
+/* Not sure why "\n" is appended as suffix to number read at location number[0]
+ * and so our required input number is available from index 1
+ */    
     printf("Given phone number is %s\n", number);
     printf("printing T9 keyboard\n");
     for(i = 0;i < 10; i++) {
