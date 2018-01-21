@@ -53,7 +53,7 @@ void mergesort(int* array, int lower, int upper)
 	int pivot_middle;
 
 	if(lower<upper) {
-		pivot_middle = (lower + (upper))/2;
+		pivot_middle = (lower + upper)/2;
 		
 		mergesort(array, lower, pivot_middle);
 		mergesort(array, pivot_middle + 1, upper);

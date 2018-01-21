@@ -64,5 +64,3 @@ void get_subarray_with_given_sum(int *array, int size_array, int sum_needed, int
         }
     }
 }
-
-
